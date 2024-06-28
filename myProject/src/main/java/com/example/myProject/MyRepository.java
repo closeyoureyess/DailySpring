@@ -1,3 +1,5 @@
+package com.example.myProject;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
