@@ -2,54 +2,62 @@ package com.example.myProject;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class CaseService {
-    private int id;
-    private String dateOfCreate;
-    private String name;
     private static Map<Integer, String> cases = new HashMap<>();
 
-    CaseService(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-    CaseService() {
-    }
-
-    public void createCaseMethod(int id, String name){
-        System.out.println("Метод запущен!");
+    public void createCaseMethod(int id, String name) {
         cases.put(id, name);
     }
 
-    public String searchInformation(int id){
-        System.out.println("Метод запущен!");
+    public boolean searchInformation(int id) {
+        if (cases.containsKey(id)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String searchName(int id) {
         return cases.get(id);
     }
 
-    public int getId() {
-        return id;
+    public void changeCase(int id, String name) {
+        HashMap<Integer, String> forReplace = new HashMap<>();
+        for (int key : cases.keySet()) {
+            if (id == key) {
+                forReplace.put(id, name);
+                break;
+            }
+        }
+        for (Map.Entry<Integer, String> enumeration : cases.entrySet()) {
+            if (id != enumeration.getKey()) {
+                forReplace.put(enumeration.getKey(), enumeration.getValue());
+            }
+        }
+        cases.clear();
+        cases.putAll(forReplace);
+
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void deleteCases(int id){
+        cases.remove(id);
     }
 
-    public String getName() {
-        return name;
+    public Map<Integer, String> getCases() {
+        return cases;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getDateOfCreate() {
-        return dateOfCreate;
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
-    public void setDateOfCreate(String dateOfCreate) {
-        this.dateOfCreate = dateOfCreate;
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
