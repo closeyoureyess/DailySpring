@@ -1,5 +1,8 @@
 package com.example.myProject;
 
+import com.example.myProject.dto.CaseDto;
+import com.example.myProject.mapper.CaseMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -9,12 +12,19 @@ import java.util.TreeSet;
 
 @Service
 public class CaseService {
-    private static Map<Integer, Case> cases = new HashMap<>();
+    private static Map<Integer, CaseDto> cases = new HashMap<>();
+    @Autowired
+    CaseMapper caseMapper;
+    @Autowired
+    CaseRepository caseRepository;
 
-    public Case createCaseMethod(Case caseObject) {
+    public CaseDto createCaseMethod(CaseDto caseObject) {
         LocalDateTime localDateTime = LocalDateTime.now();
         caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
-        cases.put(caseObject.getId(), new Case(caseObject.getName(), caseObject.getDateOfCreate()));
+        Case newCase = caseMapper.convertDtoToCase(caseObject);
+        Case newCaseRepository = caseRepository.createCase(newCase);
+        caseObject = caseMapper.convertCaseToDto(newCaseRepository);
+        cases.put(caseObject.getId(), new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));
         return caseObject;
     }
 
@@ -26,34 +36,34 @@ public class CaseService {
         }
     }
 
-    public Case searchName(int id) {
+    public CaseDto searchName(int id) {
         return cases.get(id);
     }
 
-    public void changeCase(int id, Case caseObject) {
-        HashMap<Integer, Case> forReplace = new HashMap<>();
+    public void changeCase(int id, CaseDto caseObject) {
+        HashMap<Integer, CaseDto> forReplace = new HashMap<>();
         LocalDateTime localDateTime = LocalDateTime.now();
         caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
         for (int key : cases.keySet()) {
             if (id == key) {
-                forReplace.put(id, new Case(caseObject.getName(), caseObject.getDateOfCreate()));
+                forReplace.put(id, new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));
                 break;
             }
         }
-        for (Map.Entry<Integer, Case> enumeration : cases.entrySet()) {
+        for (Map.Entry<Integer, CaseDto> enumeration : cases.entrySet()) {
             if (id != enumeration.getKey()) {
-                forReplace.put(enumeration.getKey(), new Case(enumeration.getValue().getName(), enumeration.getValue().getDateOfCreate()));
+                forReplace.put(enumeration.getKey(), new CaseDto(enumeration.getValue().getName(), enumeration.getValue().getDateOfCreate()));
             }
         }
         cases.clear();
         cases.putAll(forReplace);
     }
 
-    public void deleteCases(int id){
+    public void deleteCases(int id) {
         cases.remove(id);
     }
 
-    public Map<Integer, Case> getCases() {
+    public Map<Integer, CaseDto> getCases() {
         return cases;
     }
 
