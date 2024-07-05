@@ -2,15 +2,20 @@ package com.example.myProject;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 @Service
 public class CaseService {
-    private static Map<Integer, String> cases = new HashMap<>();
+    private static Map<Integer, Case> cases = new HashMap<>();
 
-    public void createCaseMethod(int id, String name) {
-        cases.put(id, name);
+    public Case createCaseMethod(Case caseObject) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
+        cases.put(caseObject.getId(), new Case(caseObject.getName(), caseObject.getDateOfCreate()));
+        return caseObject;
     }
 
     public boolean searchInformation(int id) {
@@ -21,33 +26,34 @@ public class CaseService {
         }
     }
 
-    public String searchName(int id) {
+    public Case searchName(int id) {
         return cases.get(id);
     }
 
-    public void changeCase(int id, String name) {
-        HashMap<Integer, String> forReplace = new HashMap<>();
+    public void changeCase(int id, Case caseObject) {
+        HashMap<Integer, Case> forReplace = new HashMap<>();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
         for (int key : cases.keySet()) {
             if (id == key) {
-                forReplace.put(id, name);
+                forReplace.put(id, new Case(caseObject.getName(), caseObject.getDateOfCreate()));
                 break;
             }
         }
-        for (Map.Entry<Integer, String> enumeration : cases.entrySet()) {
+        for (Map.Entry<Integer, Case> enumeration : cases.entrySet()) {
             if (id != enumeration.getKey()) {
-                forReplace.put(enumeration.getKey(), enumeration.getValue());
+                forReplace.put(enumeration.getKey(), new Case(enumeration.getValue().getName(), enumeration.getValue().getDateOfCreate()));
             }
         }
         cases.clear();
         cases.putAll(forReplace);
-
     }
 
     public void deleteCases(int id){
         cases.remove(id);
     }
 
-    public Map<Integer, String> getCases() {
+    public Map<Integer, Case> getCases() {
         return cases;
     }
 

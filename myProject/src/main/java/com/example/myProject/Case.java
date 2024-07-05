@@ -1,18 +1,29 @@
 package com.example.myProject;
 
-import java.util.Objects;
+import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+@Component
 public class Case {
     private int id;
     private static String dateOfCreate;
     private String name;
 
-    Case(int id, String name) {
+    public Case(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    Case() {
+    public Case(String name, String dateOfCreate) {
+        this.id = id;
+        this.name = name;
+    }
+    public Case(String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Case() {
     }
     public int getId() {
         return id;
