@@ -1,15 +1,30 @@
 package com.example.myProject;
 
+import jakarta.persistence.*;
+import org.aspectj.weaver.tools.GeneratedClassHandler;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Objects;
-@Component
-public class Case {
+@Entity
+@Table (name = "case")
+public class Case implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "date_of_create")
     private static String dateOfCreate;
+
+    @Column(name = "name")
     private String name;
 
     public Case(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Case(int id, String name, String dateOfCreate) {
         this.id = id;
         this.name = name;
     }
@@ -25,7 +40,7 @@ public class Case {
 
     public Case() {
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

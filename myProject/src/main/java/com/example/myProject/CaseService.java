@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -22,26 +23,28 @@ public class CaseService {
         LocalDateTime localDateTime = LocalDateTime.now();
         caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
         Case newCase = caseMapper.convertDtoToCase(caseObject);
-        Case newCaseRepository = caseRepository.createCase(newCase);
+        Case newCaseRepository = caseRepository.save(newCase);
         caseObject = caseMapper.convertCaseToDto(newCaseRepository);
-        cases.put(caseObject.getId(), new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));
+        /*cases.put(caseObject.getId(), new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));*/
         return caseObject;
     }
 
-    public boolean searchInformation(int id) {
-        if (cases.containsKey(id)) {
+    public boolean searchInformation(Integer id) {
+        if (caseRepository.existsById(id)) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
-    public CaseDto searchName(int id) {
-        return cases.get(id);
+    public CaseDto searchName(Integer id) {
+        if (caseRepository.findById(id).isPresent()) {
+            return caseMapper.convertCaseToDto(caseRepository.findById(id).get());
+        }
+        return null;
     }
 
-    public void changeCase(int id, CaseDto caseObject) {
-        HashMap<Integer, CaseDto> forReplace = new HashMap<>();
+    public CaseDto changeCase(Integer id, CaseDto caseObject) {
+        /*HashMap<Integer, CaseDto> forReplace = new HashMap<>();
         LocalDateTime localDateTime = LocalDateTime.now();
         caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
         for (int key : cases.keySet()) {
@@ -56,15 +59,24 @@ public class CaseService {
             }
         }
         cases.clear();
-        cases.putAll(forReplace);
+        cases.putAll(forReplace);*/
+
+        if(caseRepository.findById(id).isPresent()){
+            return caseMapper.convertCaseToDto(caseRepository.save(caseMapper.convertDtoToCase(caseObject)));
+        }
+        return null;
     }
 
-    public void deleteCases(int id) {
-        cases.remove(id);
+    public boolean deleteCases(Integer id) {
+        caseRepository.deleteById(id);
+        if(caseRepository.findById(id).isPresent()){
+            return true;
+        }
+        return false;
     }
 
-    public Map<Integer, CaseDto> getCases() {
-        return cases;
+    public List<CaseDto> getCases() {
+        return caseMapper.convertCaseToListDto(caseRepository.findAll());
     }
 
     @Override

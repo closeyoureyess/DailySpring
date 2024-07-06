@@ -1,14 +1,6 @@
 package com.example.myProject;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class CaseRepository {
-    public void rep(){
-        System.out.println("Репозиторий");
-    }
-
-    public Case createCase(Case caseObject){
-        return new Case();
-    }
+public interface CaseRepository extends JpaRepository<Case, Integer> {
 }

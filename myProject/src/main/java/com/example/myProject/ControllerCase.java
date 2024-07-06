@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v2/case")
@@ -21,7 +21,7 @@ public class ControllerCase {
     @PostMapping("/create")
     public ResponseEntity<CaseDto> createCase(@RequestBody CaseDto caseObject) {
         log.info("Создание дела, POST " + caseObject.getName());
-        if(localObject.createCaseMethod(caseObject) != null) {
+        if (localObject.createCaseMethod(caseObject) != null) {
             return ResponseEntity.ok(localObject.createCaseMethod(caseObject));
         } else {
             return ResponseEntity.internalServerError().build();
@@ -31,31 +31,27 @@ public class ControllerCase {
     @GetMapping("/gen-info/{id}")
     public ResponseEntity<String> getCase(@PathVariable("id") Integer id) {
         log.info("Получение дела по id, метод GET " + id);
-        if (localObject.searchInformation(id)) {
-            System.out.println("Успешно, метод GET");
+        if (localObject.searchInformation(id) && localObject.searchName(id) != null) {
             return ResponseEntity.ok("Дата создания: " + localObject.searchName(id).getDateOfCreate() + ";\nНаименование: " + localObject.searchName(id).getName() + ";\nID: " + id);
         } else {
-            System.out.println("Не найдено!");
             return ResponseEntity.notFound().build();
         }
     }
 
     @PatchMapping("/update-case/{id}")
-    public ResponseEntity<Map<Integer, CaseDto>> changeCase(@PathVariable("id") Integer id, @RequestBody CaseDto caseObject) {
+    public ResponseEntity<CaseDto> changeCase(@PathVariable("id") Integer id, @RequestBody CaseDto caseObject) {
         log.info("Изменения дела по id, метод PATCH " + id + " " + caseObject.getName());
         if (localObject.searchInformation(id)) {
-            localObject.changeCase(id, caseObject);
-            return ResponseEntity.ok(localObject.getCases());
+            return ResponseEntity.ok(localObject.changeCase(id, caseObject));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Map<Integer, CaseDto>> deleteCase(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<CaseDto>> deleteCase(@PathVariable("id") Integer id) {
         log.info("Удаление дела по id, метод DELETE " + id);
-        if (localObject.searchInformation(id)) {
-            localObject.deleteCases(id);
+        if (localObject.searchInformation(id) && localObject.deleteCases(id)) {
             return ResponseEntity.ok(localObject.getCases());
         } else {
             return ResponseEntity.notFound().build();

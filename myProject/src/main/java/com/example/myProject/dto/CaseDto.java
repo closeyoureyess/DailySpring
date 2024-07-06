@@ -1,5 +1,6 @@
 package com.example.myProject.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -7,9 +8,15 @@ import java.util.Objects;
 @Component
 public class CaseDto {
 
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
     private int id;
+    @JsonProperty(access =  JsonProperty.Access.READ_ONLY)
     private static String dateOfCreate;
     private String name;
+
+    public CaseDto(int id, String name, String dateOfCreate) {
+        this.name = name;
+    }
 
     public CaseDto(String name, String dateOfCreate) {
         this.name = name;
