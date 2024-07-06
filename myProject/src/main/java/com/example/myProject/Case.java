@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Objects;
 @Entity
-@Table (name = "case")
+@Table (name = "case_entity")
 public class Case implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
