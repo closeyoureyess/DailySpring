@@ -51,7 +51,8 @@ public class ControllerCase {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<List<CaseDto>> deleteCase(@PathVariable("id") Integer id) {
         log.info("Удаление дела по id, метод DELETE " + id);
-        if (localObject.searchInformation(id) && localObject.deleteCases(id)) {
+        if (localObject.searchInformation(id)) {
+            localObject.deleteCases(id);
             return ResponseEntity.ok(localObject.getCases());
         } else {
             return ResponseEntity.notFound().build();
