@@ -6,15 +6,16 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 @Entity
-@Table (name = "case_entity")
+@Table(name = "case_entity")
 public class Case implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "date_of_create")
-    private static String dateOfCreate;
+    private String dateOfCreate;
 
     @Column(name = "name")
     private String name;
@@ -27,19 +28,21 @@ public class Case implements Serializable {
     public Case(int id, String name, String dateOfCreate) {
         this.id = id;
         this.name = name;
+        this.dateOfCreate = dateOfCreate;
     }
 
     public Case(String name, String dateOfCreate) {
-        this.id = id;
         this.name = name;
+        this.dateOfCreate = dateOfCreate;
     }
+
     public Case(String name) {
-        this.id = id;
         this.name = name;
     }
 
     public Case() {
     }
+
     public Integer getId() {
         return id;
     }

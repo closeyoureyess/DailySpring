@@ -25,12 +25,4 @@ public class CaseMapper {
         caseDto.setId(caseObject.getId());
         return caseDto;
     }
-
-    public List<CaseDto> convertCaseToListDto(List<Case> listCaseObject) {
-        List<CaseDto> list = new LinkedList<>();
-        for (int i = 0; i < listCaseObject.size(); i++) {
-            list.add(new CaseDto(listCaseObject.get(i).getId(), listCaseObject.get(i).getName(), listCaseObject.get(i).getDateOfCreate()));
-        }
-        return list;
-    }
 }

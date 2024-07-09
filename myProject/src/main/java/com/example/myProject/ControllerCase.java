@@ -1,6 +1,8 @@
 package com.example.myProject;
 
 import com.example.myProject.dto.CaseDto;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,35 +16,46 @@ import java.util.List;
 public class ControllerCase {
 
     @Autowired
-    private CaseService localObject;
-    @Autowired
-    private CaseDto localCaseObject;
+    private CaseService caseService;
 
     @PostMapping("/create")
     public ResponseEntity<CaseDto> createCase(@RequestBody CaseDto caseObject) {
         log.info("Создание дела, POST " + caseObject.getName());
-        if (localObject.createCaseMethod(caseObject) != null) {
-            return ResponseEntity.ok(localObject.createCaseMethod(caseObject));
+        CaseDto caseDto = caseService.createCaseMethod(caseObject);
+        if (caseDto != null) {
+            return ResponseEntity.ok(caseDto);
         } else {
             return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping("/gen-info/{id}")
-    public ResponseEntity<String> getCase(@PathVariable("id") Integer id) {
+    public ResponseEntity<CaseDto> getCase(@PathVariable("id") Integer id) {
         log.info("Получение дела по id, метод GET " + id);
-        if (localObject.searchInformation(id) && localObject.searchName(id) != null) {
-            return ResponseEntity.ok("Дата создания: " + localObject.searchName(id).getDateOfCreate() + ";\nНаименование: " + localObject.searchName(id).getName() + ";\nID: " + id);
+        CaseDto caseDto = caseService.searchName(id);
+        if (caseDto != null) {
+            return ResponseEntity.ok(caseDto);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PatchMapping("/update-case/{id}")
-    public ResponseEntity<CaseDto> changeCase(@PathVariable("id") Integer id, @RequestBody CaseDto caseObject) {
-        log.info("Изменения дела по id, метод PATCH " + id + " " + caseObject.getName());
-        if (localObject.searchInformation(id)) {
-            return ResponseEntity.ok(localObject.changeCase(id, caseObject));
+    @GetMapping("/all-entity/{page}/{quantity}")
+    public ResponseEntity<List<CaseDto>> getAllCase(@PathVariable("page") Integer pageNubmer,
+                                                            @PathVariable("quantity") @Min(0) @Max(30) Integer pageSize) {
+        List<CaseDto> result = caseService.getCases(pageNubmer, pageSize);
+        if (!result.isEmpty()) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @PatchMapping("/update-case")
+    public ResponseEntity<CaseDto> changeCase(@RequestBody CaseDto caseObject) {
+        log.info("Изменения дела по id, метод PATCH " + caseObject.getName() + " " + caseObject.getId());
+        if (caseService.searchInformation(caseObject.getId())) {
+            return ResponseEntity.ok(caseService.changeCase(caseObject));
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -51,9 +64,9 @@ public class ControllerCase {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<List<CaseDto>> deleteCase(@PathVariable("id") Integer id) {
         log.info("Удаление дела по id, метод DELETE " + id);
-        if (localObject.searchInformation(id)) {
-            localObject.deleteCases(id);
-            return ResponseEntity.ok(localObject.getCases());
+        if (caseService.searchInformation(id)) {
+            caseService.deleteCases(id);
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }

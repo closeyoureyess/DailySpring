@@ -3,13 +3,14 @@ package com.example.myProject;
 import com.example.myProject.dto.CaseDto;
 import com.example.myProject.mapper.CaseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 @Service
 public class CaseService {
@@ -37,31 +38,15 @@ public class CaseService {
     }
 
     public CaseDto searchName(Integer id) {
-        if (caseRepository.findById(id).isPresent()) {
-            return caseMapper.convertCaseToDto(caseRepository.findById(id).get());
+        Optional<Case> case1 = caseRepository.findById(id);
+        if (case1.isPresent()) {
+            return caseMapper.convertCaseToDto(case1.get());
         }
         return null;
     }
 
-    public CaseDto changeCase(Integer id, CaseDto caseObject) {
-        /*HashMap<Integer, CaseDto> forReplace = new HashMap<>();
-        LocalDateTime localDateTime = LocalDateTime.now();
-        caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
-        for (int key : cases.keySet()) {
-            if (id == key) {
-                forReplace.put(id, new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));
-                break;
-            }
-        }
-        for (Map.Entry<Integer, CaseDto> enumeration : cases.entrySet()) {
-            if (id != enumeration.getKey()) {
-                forReplace.put(enumeration.getKey(), new CaseDto(enumeration.getValue().getName(), enumeration.getValue().getDateOfCreate()));
-            }
-        }
-        cases.clear();
-        cases.putAll(forReplace);*/
-
-        if(caseRepository.findById(id).isPresent()){
+    public CaseDto changeCase(CaseDto caseObject) {
+        if(caseRepository.findById(caseObject.getId()).isPresent()){
             return caseMapper.convertCaseToDto(caseRepository.save(caseMapper.convertDtoToCase(caseObject)));
         }
         return null;
@@ -75,8 +60,16 @@ public class CaseService {
         return false;
     }
 
-    public List<CaseDto> getCases() {
-        return caseMapper.convertCaseToListDto(caseRepository.findAll());
+    public /*Page<Case>*/List<CaseDto> getCases(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Case> page = caseRepository.findAll(pageable);
+        List<Case> pageToCaseList = page.stream().toList();
+        List<CaseDto> caseListPageToCaseDtoList = new LinkedList<>();
+        for (int i = 0; i < pageToCaseList.size(); i++) {
+            caseListPageToCaseDtoList.add(new CaseDto(pageToCaseList.get(i).getId(), pageToCaseList.get(i).getName(),
+                    pageToCaseList.get(i).getDateOfCreate()));
+        }
+        return caseListPageToCaseDtoList;
     }
 
     @Override
