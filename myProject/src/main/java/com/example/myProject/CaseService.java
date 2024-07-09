@@ -14,7 +14,6 @@ import java.util.*;
 
 @Service
 public class CaseService {
-    private static Map<Integer, CaseDto> cases = new HashMap<>();
     @Autowired
     CaseMapper caseMapper;
     @Autowired
@@ -26,7 +25,6 @@ public class CaseService {
         Case newCase = caseMapper.convertDtoToCase(caseObject);
         Case newCaseRepository = caseRepository.save(newCase);
         caseObject = caseMapper.convertCaseToDto(newCaseRepository);
-        /*cases.put(caseObject.getId(), new CaseDto(caseObject.getName(), caseObject.getDateOfCreate()));*/
         return caseObject;
     }
 
@@ -60,7 +58,7 @@ public class CaseService {
         return false;
     }
 
-    public /*Page<Case>*/List<CaseDto> getCases(Integer pageNumber, Integer pageSize) {
+    public List<CaseDto> getCases(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Case> page = caseRepository.findAll(pageable);
         List<Case> pageToCaseList = page.stream().toList();
