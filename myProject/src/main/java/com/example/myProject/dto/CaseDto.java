@@ -2,10 +2,10 @@ package com.example.myProject.dto;
 
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-@Component
-public class CaseDto {
+public class CaseDto implements Serializable {
 
     private int id;
     private String dateOfCreate;
@@ -60,7 +60,6 @@ public class CaseDto {
         CaseDto caseDto = (CaseDto) o;
         return id == caseDto.id && Objects.equals(name, caseDto.name);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
