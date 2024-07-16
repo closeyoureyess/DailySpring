@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,13 +16,12 @@ import java.util.*;
 @Service
 public class CaseService {
     @Autowired
-    CaseMapper caseMapper;
+    private CaseMapper caseMapper;
     @Autowired
-    CaseRepository caseRepository;
+    private CaseRepository caseRepository;
 
     public CaseDto createCaseMethod(CaseDto caseObject) {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        caseObject.setDateOfCreate(localDateTime.toLocalTime().toString());
+        caseObject.setDateOfCreate(LocalDateTime.now());
         Case newCase = caseMapper.convertDtoToCase(caseObject);
         Case newCaseRepository = caseRepository.save(newCase);
         caseObject = caseMapper.convertCaseToDto(newCaseRepository);
@@ -44,15 +44,21 @@ public class CaseService {
     }
 
     public CaseDto changeCase(CaseDto caseObject) {
-        if(caseRepository.findById(caseObject.getId()).isPresent()){
-            return caseMapper.convertCaseToDto(caseRepository.save(caseMapper.convertDtoToCase(caseObject)));
+        if (caseRepository.findById(caseObject.getId()).isPresent() && searchInformation(caseObject.getId())) {
+            Case localObject = caseMapper.convertDtoToCase(caseObject);
+            LocalDateTime checkTimePostgre = caseRepository.findById(caseObject.getId()).get().getDateOfCreate();
+            if (caseObject.getDateOfCreate() == null && checkTimePostgre != null) {
+                localObject.setDateOfCreate(checkTimePostgre);
+                return caseMapper.convertCaseToDto(caseRepository.save(localObject));
+            }
+            return caseMapper.convertCaseToDto(caseRepository.save(localObject));
         }
         return null;
     }
 
     public boolean deleteCases(Integer id) {
-        caseRepository.deleteById(id);
-        if(caseRepository.findById(id).isPresent()){
+        if (searchInformation(id)) {
+            caseRepository.deleteById(id);
             return true;
         }
         return false;
@@ -68,6 +74,10 @@ public class CaseService {
                     pageToCaseList.get(i).getDateOfCreate()));
         }
         return caseListPageToCaseDtoList;
+    }
+
+    public void deleteAllCases() {
+        caseRepository.deleteAll();
     }
 
     @Override

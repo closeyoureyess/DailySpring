@@ -1,21 +1,25 @@
 package com.example.myProject;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.aspectj.weaver.tools.GeneratedClassHandler;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "case_entity")
-public class Case implements Serializable {
+public class Case {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(name = "date_of_create")
-    private String dateOfCreate;
+    private LocalDateTime dateOfCreate;
 
     @Column(name = "name")
     private String name;
@@ -25,13 +29,13 @@ public class Case implements Serializable {
         this.name = name;
     }
 
-    public Case(int id, String name, String dateOfCreate) {
+    public Case(int id, String name, LocalDateTime dateOfCreate) {
         this.id = id;
         this.name = name;
         this.dateOfCreate = dateOfCreate;
     }
 
-    public Case(String name, String dateOfCreate) {
+    public Case(String name, LocalDateTime dateOfCreate) {
         this.name = name;
         this.dateOfCreate = dateOfCreate;
     }
@@ -47,7 +51,7 @@ public class Case implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -59,11 +63,11 @@ public class Case implements Serializable {
         this.name = name;
     }
 
-    public String getDateOfCreate() {
+    public LocalDateTime getDateOfCreate() {
         return dateOfCreate;
     }
 
-    public void setDateOfCreate(String dateOfCreate) {
+    public void setDateOfCreate(LocalDateTime dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
     }
 

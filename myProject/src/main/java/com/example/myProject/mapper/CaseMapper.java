@@ -12,7 +12,9 @@ public class CaseMapper {
 
     public Case convertDtoToCase(CaseDto caseDto) {
         Case caseLocalObject = new Case();
-        caseLocalObject.setDateOfCreate(caseDto.getDateOfCreate());
+        if (caseDto.getDateOfCreate() != null) {
+            caseLocalObject.setDateOfCreate(caseDto.getDateOfCreate());
+        }
         caseLocalObject.setName(caseDto.getName());
         caseLocalObject.setId(caseDto.getId());
         return caseLocalObject;
@@ -20,7 +22,9 @@ public class CaseMapper {
 
     public CaseDto convertCaseToDto(Case caseObject) {
         CaseDto caseDto = new CaseDto();
-        caseDto.setDateOfCreate(caseObject.getDateOfCreate());
+        if (caseObject.getDateOfCreate() != null) {
+            caseDto.setDateOfCreate(caseObject.getDateOfCreate());
+        }
         caseDto.setName(caseObject.getName());
         caseDto.setId(caseObject.getId());
         return caseDto;

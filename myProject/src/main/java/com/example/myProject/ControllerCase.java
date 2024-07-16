@@ -42,7 +42,7 @@ public class ControllerCase {
 
     @GetMapping("/all-entity/{page}/{quantity}")
     public ResponseEntity<List<CaseDto>> getAllCase(@PathVariable("page") Integer pageNubmer,
-                                                            @PathVariable("quantity") @Min(0) @Max(30) Integer pageSize) {
+                                                    @PathVariable("quantity") @Min(0) @Max(30) Integer pageSize) {
         List<CaseDto> result = caseService.getCases(pageNubmer, pageSize);
         if (!result.isEmpty()) {
             return ResponseEntity.ok(result);
@@ -54,8 +54,9 @@ public class ControllerCase {
     @PatchMapping("/update-case")
     public ResponseEntity<CaseDto> changeCase(@RequestBody CaseDto caseObject) {
         log.info("Изменения дела по id, метод PATCH " + caseObject.getName() + " " + caseObject.getId());
-        if (caseService.searchInformation(caseObject.getId())) {
-            return ResponseEntity.ok(caseService.changeCase(caseObject));
+        CaseDto caseDto = caseService.changeCase(caseObject);
+        if (caseDto != null) {
+            return ResponseEntity.ok(caseDto);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -64,11 +65,18 @@ public class ControllerCase {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<List<CaseDto>> deleteCase(@PathVariable("id") Integer id) {
         log.info("Удаление дела по id, метод DELETE " + id);
-        if (caseService.searchInformation(id)) {
-            caseService.deleteCases(id);
+        boolean methodResult = caseService.deleteCases(id);
+        if (methodResult) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/delete-all")
+    public ResponseEntity<?> deleteCase() {
+        log.info("Удаление всех записей, DELETE-ALL ");
+        caseService.deleteAllCases();
+        return ResponseEntity.ok("Успешно");
     }
 }
