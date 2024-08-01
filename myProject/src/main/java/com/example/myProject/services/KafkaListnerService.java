@@ -1,4 +1,4 @@
-package com.example.myProject.services;
+/*package com.example.myProject.services;
 
 import com.example.myProject.dto.CaseDto;
 import lombok.extern.slf4j.Slf4j;
@@ -18,4 +18,4 @@ public class KafkaListnerService {
         log.info("Пришла сущность " + caseDto.getDateOfCreate() + " " + caseDto.getName() + " " + caseDto.getId());
         caseService.createCaseMethod(caseDto);
     }
-}
+}*/
