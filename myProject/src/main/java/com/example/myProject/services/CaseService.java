@@ -1,5 +1,7 @@
-package com.example.myProject;
+package com.example.myProject.services;
 
+import com.example.myProject.Case;
+import com.example.myProject.CaseRepository;
 import com.example.myProject.dto.CaseDto;
 import com.example.myProject.mapper.CaseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,12 @@ public class CaseService {
     @Autowired
     private CaseRepository caseRepository;
 
+    @Autowired
+    private KafkaSenderService kafkaSenderService;
+
     public CaseDto createCaseMethod(CaseDto caseObject) {
         caseObject.setDateOfCreate(LocalDateTime.now());
+        kafkaSenderService.sendMessage(caseObject);
         Case newCase = caseMapper.convertDtoToCase(caseObject);
         Case newCaseRepository = caseRepository.save(newCase);
         caseObject = caseMapper.convertCaseToDto(newCaseRepository);

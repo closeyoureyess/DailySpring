@@ -1,6 +1,7 @@
 package com.example.myProject;
 
 import com.example.myProject.dto.CaseDto;
+import com.example.myProject.services.CaseService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class ControllerCase {
     }
 
     @DeleteMapping("/delete-all")
-    public ResponseEntity<?> deleteCase() {
+    public ResponseEntity<String> deleteCase() {
         log.info("Удаление всех записей, DELETE-ALL ");
         caseService.deleteAllCases();
         return ResponseEntity.ok("Успешно");

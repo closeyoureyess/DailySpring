@@ -1,11 +1,7 @@
 package com.example.myProject.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public class CaseDto implements Serializable {
