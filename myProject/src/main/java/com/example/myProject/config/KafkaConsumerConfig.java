@@ -1,9 +1,7 @@
-/*
 package com.example.myProject.config;
 
 import com.example.myProject.dto.CaseDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -24,24 +22,23 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootStrapServers;
 
-    public Map<String, Object> consumerConfigs() {
+    @Bean
+    public ConsumerFactory<String, CaseDto> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
+        JsonDeserializer<CaseDto> deserializer = new JsonDeserializer<>(CaseDto.class);
+        deserializer.setRemoveTypeHeaders(false);
+        deserializer.addTrustedPackages("*");
+        deserializer.setUseTypeMapperForKey(true);
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        return props;
-    }
-
-    @Bean
-    public ConsumerFactory<String, CaseDto> consumerFactory(){
-        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, deserializer);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), deserializer);
     }
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CaseDto>> kafkaListenerContainerFactory(){
         ConcurrentKafkaListenerContainerFactory<String, CaseDto> consFactory = new ConcurrentKafkaListenerContainerFactory<>();
-        consFactory.setConsumerFactory(consumerFactory());
+        consFactory.setConsumerFactory(consumerConfigs());
         return consFactory;
     }
 }
-*/
