@@ -29,4 +29,13 @@ public class CaseMapper {
         caseDto.setId(caseObject.getId());
         return caseDto;
     }
+
+    public List<CaseDto> transferCaseToCaseDtoList(List<Case> caseList){
+        List<CaseDto> caseDtoList = new LinkedList<>();
+        for (int i = 0; i < caseList.size(); i++) {
+            caseDtoList.add(new CaseDto(caseList.get(i).getId(), caseList.get(i).getName(),
+                    caseList.get(i).getDateOfCreate()));
+        }
+        return caseDtoList;
+    }
 }

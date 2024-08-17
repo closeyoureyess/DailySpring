@@ -52,12 +52,25 @@ public class ControllerCase {
         }
     }
 
-    @GetMapping("/all-entity/counts")
-    public ResponseEntity<CaseDto> getCountAllCase(@PathVariable("id") Integer integer){
-
+    @GetMapping("/all-entityes")
+    public ResponseEntity<List<CaseDto>> getAllCaseNotPage(){
+        List<CaseDto> caseDtoList = caseService.getAllCaseNotPage();
+        if (caseDtoList != null){
+            return ResponseEntity.ok(caseDtoList);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/update-case")
+    @GetMapping("/all-entity/counts")
+    public ResponseEntity<Long> getCountAllCase(){
+        Long result = caseService.getCountAll();
+        if (result != null){
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/update-case")
     public ResponseEntity<CaseDto> changeCase(@RequestBody CaseDto caseObject) {
         log.info("Изменения дела по id, метод PATCH " + caseObject.getName() + " " + caseObject.getId());
         CaseDto caseDto = caseService.changeCase(caseObject);

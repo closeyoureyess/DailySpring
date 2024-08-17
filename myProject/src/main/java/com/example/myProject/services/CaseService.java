@@ -74,18 +74,17 @@ public class CaseService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Case> page = caseRepository.findAll(pageable);
         List<Case> pageToCaseList = page.stream().toList();
-        List<CaseDto> caseListPageToCaseDtoList = new LinkedList<>();
-        for (int i = 0; i < pageToCaseList.size(); i++) {
-            caseListPageToCaseDtoList.add(new CaseDto(pageToCaseList.get(i).getId(), pageToCaseList.get(i).getName(),
-                    pageToCaseList.get(i).getDateOfCreate()));
-        }
-        return caseListPageToCaseDtoList;
+        return caseMapper.transferCaseToCaseDtoList(pageToCaseList);
+    }
+    //////////////
+    public Long getCountAll(){
+        Long result = caseRepository.count();
+        return result;
     }
 
-    public long getCountAll(Integer integer){
-
-        long result = caseRepository.count();
-        return result;
+    public List<CaseDto> getAllCaseNotPage(){
+        List<Case> caseList = caseRepository.findAll();
+        return caseMapper.transferCaseToCaseDtoList(caseList);
     }
 
     public void deleteAllCases() {
