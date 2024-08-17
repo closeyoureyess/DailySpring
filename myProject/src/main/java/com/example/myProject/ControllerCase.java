@@ -52,6 +52,11 @@ public class ControllerCase {
         }
     }
 
+    @GetMapping("/all-entity/counts")
+    public ResponseEntity<CaseDto> getCountAllCase(@PathVariable("id") Integer integer){
+
+    }
+
     @PatchMapping("/update-case")
     public ResponseEntity<CaseDto> changeCase(@RequestBody CaseDto caseObject) {
         log.info("Изменения дела по id, метод PATCH " + caseObject.getName() + " " + caseObject.getId());

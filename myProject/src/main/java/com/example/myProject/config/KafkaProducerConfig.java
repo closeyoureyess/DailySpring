@@ -1,4 +1,4 @@
-package com.example.myProject.config;
+/*package com.example.myProject.config;
 
 import com.example.myProject.dto.CaseDto;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -38,4 +38,4 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-}
+}*/

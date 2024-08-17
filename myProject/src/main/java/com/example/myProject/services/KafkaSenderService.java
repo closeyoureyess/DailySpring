@@ -1,4 +1,4 @@
-package com.example.myProject.services;
+/*package com.example.myProject.services;
 
 import com.example.myProject.dto.CaseDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +22,4 @@ public class KafkaSenderService {
     public void sendMessage(CaseDto caseDto) {
         kafkaTemplate.send(topicName, caseDto);
     }
-}
+}*/

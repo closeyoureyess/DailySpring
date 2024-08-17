@@ -1,4 +1,4 @@
-package com.example.myProject.config;
+/*package com.example.myProject.config;
 
 import com.example.myProject.dto.CaseDto;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -22,17 +22,17 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.bootstrap-servers}")
     private String bootStrapServers;
 
-    /*public Map<String, Object> consumerConfigs() {
+    *//*public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        *//*JsonDeserializer<CaseDto> deserializer = new JsonDeserializer<>(CaseDto.class);
+        *//**//*JsonDeserializer<CaseDto> deserializer = new JsonDeserializer<>(CaseDto.class);
         deserializer.setRemoveTypeHeaders(false);
         deserializer.addTrustedPackages("*");
-        deserializer.setUseTypeMapperForKey(true);*//*
+        deserializer.setUseTypeMapperForKey(true);*//**//*
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         return props;
-    }*/
+    }*//*
 
     @Bean
     public ConsumerFactory<String, CaseDto> userConsumerFactory() {
@@ -53,4 +53,4 @@ public class KafkaConsumerConfig {
         consFactory.setConsumerFactory(userConsumerFactory());
         return consFactory;
     }
-}
+}*/

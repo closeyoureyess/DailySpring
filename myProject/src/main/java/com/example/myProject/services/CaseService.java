@@ -22,12 +22,12 @@ public class CaseService {
     @Autowired
     private CaseRepository caseRepository;
 
-    @Autowired
-    private KafkaSenderService kafkaSenderService;
+    /*@Autowired
+    private KafkaSenderService kafkaSenderService;*/
 
     public CaseDto createCaseMethod(CaseDto caseObject) {
         caseObject.setDateOfCreate(LocalDateTime.now());
-        kafkaSenderService.sendMessage(caseObject);
+       /* kafkaSenderService.sendMessage(caseObject);*/
         Case newCase = caseMapper.convertDtoToCase(caseObject);
         Case newCaseRepository = caseRepository.save(newCase);
         caseObject = caseMapper.convertCaseToDto(newCaseRepository);
@@ -80,6 +80,12 @@ public class CaseService {
                     pageToCaseList.get(i).getDateOfCreate()));
         }
         return caseListPageToCaseDtoList;
+    }
+
+    public long getCountAll(Integer integer){
+
+        long result = caseRepository.count();
+        return result;
     }
 
     public void deleteAllCases() {
